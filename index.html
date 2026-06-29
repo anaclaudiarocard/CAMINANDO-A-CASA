@@ -138,6 +138,14 @@
           <button id="chipSexoHembra" onclick="app.setSexo('hembra')">♀️ Hembra</button>
           <button id="chipSexoMacho"  onclick="app.setSexo('macho')">♂️ Macho</button>
         </div>
+        <div style="font-size:13px;font-weight:700;color:#8a847e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;margin-top:4px;">Estado</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;">
+          <button id="chipEstTodos"    onclick="app.setSStatus('todos')">🐾 Todos</button>
+          <button id="chipEstPerdida"  onclick="app.setSStatus('Perdida')">🔴 Perdidas</button>
+          <button id="chipEstVista"    onclick="app.setSStatus('Vista en la zona')">🟡 Vistas</button>
+          <button id="chipEstAdopcion" onclick="app.setSStatus('En adopción')">💙 En adopción</button>
+          <button id="chipEstEncontrada" onclick="app.setSStatus('Encontrada')">🟢 Encontradas</button>
+        </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;">
           <div>
             <label class="fl" style="text-transform:uppercase;letter-spacing:.5px;">Departamento</label>
@@ -169,8 +177,14 @@
     <!-- ===== REGISTRAR ===== -->
     <section id="secRegistrar" hidden style="padding-bottom:40px;">
       <div style="background:#fff;border-radius:22px;padding:26px;box-shadow:0 8px 24px rgba(0,0,0,.06);max-width:780px;" class="fade-up">
-        <h2 style="margin:0 0 4px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:24px;color:#33302d;">Registrar una mascota perdida</h2>
-        <p style="margin:0 0 22px;color:#8a847e;">Comparte los datos de tu mascota para que más personas puedan ayudarte a encontrarla.</p>
+        <h2 style="margin:0 0 4px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:24px;color:#33302d;">Registrar mascota</h2>
+        <p style="margin:0 0 16px;color:#8a847e;">¿Qué tipo de registro quieres hacer?</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:22px;">
+          <button type="button" id="fStatusPerdida"  onclick="app.setFStatus('Perdida')"  style="border:2px solid #D9480F;border-radius:14px;padding:12px 8px;cursor:pointer;font-weight:700;font-size:14px;background:#FFF0EB;color:#D9480F;text-align:center;">🔴 Perdida<br><span style="font-size:11px;font-weight:400;opacity:.8;">Mi mascota se perdió</span></button>
+          <button type="button" id="fStatusVista"    onclick="app.setFStatus('Vista en la zona')" style="border:2px solid #9C6A05;border-radius:14px;padding:12px 8px;cursor:pointer;font-weight:700;font-size:14px;background:#FFF8E6;color:#9C6A05;text-align:center;">🟡 La vi<br><span style="font-size:11px;font-weight:400;opacity:.8;">Vi una mascota perdida</span></button>
+          <button type="button" id="fStatusAdopcion" onclick="app.setFStatus('En adopción')" style="border:2px solid #2B6CB0;border-radius:14px;padding:12px 8px;cursor:pointer;font-weight:700;font-size:14px;background:#EBF4FF;color:#2B6CB0;text-align:center;">💙 Adopción<br><span style="font-size:11px;font-weight:400;opacity:.8;">Doy mascota en adopción</span></button>
+          <button type="button" id="fStatusEncontrada" onclick="app.setFStatus('Encontrada')" style="border:2px solid #1B7A4B;border-radius:14px;padding:12px 8px;cursor:pointer;font-weight:700;font-size:14px;background:#E3F8EC;color:#1B7A4B;text-align:center;">🟢 Encontrada<br><span style="font-size:11px;font-weight:400;opacity:.8;">La encontré y la tengo</span></button>
+        </div>
         <label style="display:block;cursor:pointer;margin-bottom:20px;">
           <input type="file" accept="image/*" id="fPhoto" onchange="app.onPhoto(event)" style="display:none;">
           <div id="photoPreview" hidden style="position:relative;border-radius:16px;overflow:hidden;height:220px;border:2px solid #ffe3d6;">
@@ -252,7 +266,7 @@
   <footer style="background:#2c2f36;color:#fff;padding:30px 20px;margin-top:10px;">
     <div style="max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:nowrap;align-items:center;" class="footer-inner">
       <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTA4MCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIyNjAgMzAgNTYwIDY1NCI+CiAgCiAgPGcgdHJhbnNmb3JtPSJtYXRyaXgoNC44IDAgMCA0LjggNTQwIDMxMCkiPgogICAgPHBhdGggc3R5bGU9ImZpbGw6I2ZmZmZmZiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTUwLjAwNDcxLC00OS45OTk3ODUpIiBkPSJtIDM0LjU1MSA0NCBjIC0wLjY2NDA2IC0wLjI2NTYyIC0xIC0xLjAxOTUgLTAuNzM0MzggLTEuNzAzMSBjIDAuMjY1NjIgLTAuNjY0MDYgMS4wMTk1IC0xIDEuNzAzMSAtMC43MzQzOCBjIDMuNDQ5MiAxLjM3ODkgNS43MzQ0IDQuNzE0OCA1LjczNDQgOC40Mzc1IGMgMCAzLjcxNDggLTIuMjc3MyA3LjA2MjUgLTUuNzUzOSA4LjQzNzUgYyAtMC42NjQwNiAwLjI2NTYyIC0xLjQxOCAtMC4wNzAzMTIgLTEuNjgzNiAtMC43NTM5MSBjIC0wLjI2NTYyIC0wLjY2NDA2IDAuMDcwMzEzIC0xLjQxOCAwLjczNDM4IC0xLjY4MzYgYyAyLjQ4MDUgLTAuOTY4NzUgNC4wNzAzIC0zLjM0NzcgNC4wNzAzIC02IHMgLTEuNTg5OCAtNS4wMzEyIC00LjA3MDMgLTYgeiBtIDIzLjM3OSA0MS4zNzkgYyAwLjE1MjM0IC0wLjcwMzEyIDAuODM1OTQgLTEuMTcxOSAxLjU1MDggLTEuMDM5MSBjIDAuNzAzMTIgMC4xNTIzNCAxLjE3MTkgMC44MzU5NCAxLjAzOTEgMS41NTA4IGwgLTEuNzc3MyA4Ljk2ODggYyAtMC4xMjg5MSAwLjYwOTM4IC0wLjY3OTY5IDEuMDU4NiAtMS4yODEyIDEuMDU4NiBoIC0xNC44NTkgYyAtMC42NjQwNiAwIC0xLjIxNDggLTAuNDg4MjggLTEuMzA0NyAtMS4xMzI4IGwgLTEuNjEzMyAtOC4yMTQ4IGwgLTguMTk1MyAtMy40MDYyIGwgLTcuMDE5NSA0LjcxNDggYyAtMC41MzEyNSAwLjM1NTQ3IC0xLjIxNDggMC4yNjU2MiAtMS42NjQxIC0wLjE3MTg4IGwgLTEwLjQ4OCAtMTAuNTA0IGMgLTAuNDg4MjggLTAuNDY4NzUgLTAuNTExNzIgLTEuMjE0OCAtMC4xMTMyOCAtMS43MjI3IGwgNC42NTIzIC02LjkyOTcgbCAtMy40MDYyIC04LjIxNDggbCAtOC4yNzczIC0xLjY0NDUgYyAtMC42MjEwOSAtMC4xMTMyOCAtMS4wNjI1IC0wLjY2NDA2IC0xLjA2MjUgLTEuMjg1MiBsIDAuMDAzOTA2IC0xNC44NDQgYyAwIC0wLjY0NDUzIDAuNDg4MjggLTEuMTk1MyAxLjEzMjggLTEuMjg1MiBsIDguMjE0OCAtMS42MTMzIGwgMy40MDYyIC04LjIxNDggbCAtNC43MTQ4IC03LjAxOTUgYyAtMC4zNTU0NyAtMC41MTE3MiAtMC4yNjU2MiAtMS4yMTQ4IDAuMTcxODggLTEuNjQ0NSBsIDEwLjQ4OCAtMTAuNTIgYyAwLjQ2ODc1IC0wLjQ2ODc1IDEuMjE0OCAtMC41MTE3MiAxLjc0NjEgLTAuMDkzNzUgbCA2LjkyOTcgNC42NTIzIGwgOC4xOTUzIC0zLjQwNjIgbCAxLjY0NDUgLTguMjc3MyBjIDAuMTAxNTYgLTAuNjA5MzggMC42NjAxNiAtMS4wNTg2IDEuMjczNCAtMS4wNTg2IGggMTQuODU1IGMgMC42NjQwNiAwIDEuMTk1MyAwLjQ4ODI4IDEuMjg1MiAxLjEzMjggbCAxLjc3NzMgOC44OTg0IGMgMC4xMzI4MSAwLjcwMzEyIC0wLjMzNTk0IDEuMzk4NCAtMS4wMzkxIDEuNTMxMiBjIC0wLjcwMzEyIDAuMTUyMzQgLTEuMzk4NCAtMC4zMDQ2OSAtMS41NTA4IC0xLjAxOTUgbCAtMS41NTA4IC03LjkyOTcgaCAtMTIuNjg0IGwgLTEuNTcwMyA3LjkyOTcgYyAtMC4wOTM3NSAwLjM5ODQ0IC0wLjM1NTQ3IDAuNzc3MzQgLTAuNzc3MzQgMC45NDkyMiBsIC05LjUgMy45Mzc1IGMgLTAuMzk4NDQgMC4xNTIzNCAtMC44NjcxOSAwLjEzMjgxIC0xLjIzNDQgLTAuMTMyODEgbCAtNi43MDMxIC00LjQ4ODMgbCAtOC45Njg4IDguOTg4MyBsIDQuNDQ5MiA2LjY0NDUgYyAwLjI2NTYyIDAuMzU1NDcgMC4zNTU0NyAwLjgzNTk0IDAuMTUyMzQgMS4yODUyIGwgLTMuOTE4IDkuNDQ5MiBjIC0wLjEzMjgxIDAuNDE3OTcgLTAuNTExNzIgMC43NTM5MSAtMC45Njg3NSAwLjgzNTk0IGwgLTcuOTA2MiAxLjU1MDggdiAxMi43MDMgbCA3LjkwNjIgMS41NTA4IGMgMC40MTc5NyAwLjA5Mzc1IDAuNzc3MzQgMC4zNzg5MSAwLjk0OTIyIDAuNzk2ODcgbCAzLjkzNzUgOS40ODA1IGMgMC4xNzE4OCAwLjM5ODQ0IDAuMTMyODEgMC44NjcxOSAtMC4xMTMyOCAxLjIzNDQgbCAtNC40ODgzIDYuNzAzMSBsIDguOTY4OCA4Ljk2ODggbCA2LjY0NDUgLTQuNDQ5MiBjIDAuMzc4OTEgLTAuMjY1NjIgMC44NjcxOSAtMC4zMzU5NCAxLjMwNDcgLTAuMTUyMzQgbCA5LjQyOTcgMy45MTggYyAwLjQxNzk3IDAuMTUyMzQgMC43NTM5MSAwLjUxMTcyIDAuODM1OTQgMC45Njg3NSBsIDEuNTcwMyA3LjkwNjIgaCAxMi42ODQgeiBtIDMzLjY3MiAtMzkuNjc2IGMgMi4zNjcyIDAgNC4yOTY5IDEuOTI5NyA0LjI5NjkgNC4yOTY5IHMgLTEuOTI5NyA0LjI5NjkgLTQuMjk2OSA0LjI5NjkgYyAtMS45MDYyIDAgLTMuNTE5NSAtMS4yNjU2IC00LjA3MDMgLTIuOTg4MyBsIC0zNS41NjIgLTAuMDAzOTA2IHYgLTIuNjEzMyBoIDM1LjU1MSBjIDAuNTYyNSAtMS43MjI3IDIuMTc1OCAtMi45ODgzIDQuMDgyIC0yLjk4ODMgeiBtIC0xNy42MjEgLTI4LjcxNSBoIC04Ljg3ODkgbCAtNy43OTY5IDEzLjUgYyAtMC4yNDYwOSAwLjQxNzk3IC0wLjY4MzU5IDAuNjQ0NTMgLTEuMTMyOCAwLjY0NDUzIGggLTQuMjAzMSB2IC0yLjYxMzMgaCAzLjQ0OTIgbCA3Ljc0NjEgLTEzLjQxOCBjIDAuMjAzMTMgLTAuNDM3NSAwLjY2NDA2IC0wLjc1MzkxIDEuMTcxOSAtMC43NTM5MSBoIDkuNjMyOCBjIDAuNTcwMzEgLTEuNzIyNyAyLjE5NTMgLTIuOTY4OCA0LjA5MzggLTIuOTY4OCBjIDIuMzY3MiAwIDQuMjk2OSAxLjkyOTcgNC4yOTY5IDQuMjk2OSBjIDAgMi4zNjcyIC0xLjkyOTcgNC4yNzczIC00LjI5NjkgNC4yNzczIGMgLTEuODk4NCAwLjAwNzgxMyAtMy41MTE3IC0xLjIzODMgLTQuMDgyIC0yLjk2NDggeiBtIDEwLjI5NyAxNS4wNTEgaCAtNy42MTMzIGwgLTguODE2NCA4Ljc4NTIgYyAtMC4yNDYwOSAwLjI2NTYyIC0wLjYwMTU2IDAuMzk4NDQgLTAuOTI5NjkgMC4zOTg0NCBoIC0xNC45NDkgdiAtMi42MzI4IGggMTQuNDA2IGwgOC43ODUyIC04Ljc4NTIgYyAwLjIyMjY2IC0wLjI0NjA5IDAuNTUwNzggLTAuMzk4NDQgMC45Mjk2OSAtMC4zOTg0NCBoIDguMTcxOSBjIDAuNTUwNzggLTEuNzIyNyAyLjE3MTkgLTIuOTY4OCA0LjA5MzggLTIuOTY4OCBjIDIuMzY3MiAwIDQuMjk2OSAxLjkwNjIgNC4yOTY5IDQuMjc3MyBjIDAgMi4zODY3IC0xLjkyOTcgNC4yOTY5IC00LjI5NjkgNC4yOTY5IGMgLTEuOTE4IDAgLTMuNTI3MyAtMS4yMzQ0IC00LjA3ODEgLTIuOTcyNyB6IG0gLTEwLjI5NyA1My42MDUgaCAtOS42MzI4IGMgLTAuNTExNzIgMCAtMC45Njg3NSAtMC4zMDQ2OSAtMS4xNzE5IC0wLjc1MzkxIGwgLTcuNzQ2MSAtMTMuNDE4IGggLTMuNDQ5MiB2IC0yLjYxMzMgaCA0LjIwMzEgYyAwLjQzNzUgMCAwLjg4NjcyIDAuMjIyNjYgMS4xMzI4IDAuNjQ0NTMgbCA3Ljc5NjkgMTMuNSBoIDguODc4OSBjIDAuNTcwMzEgLTEuNzIyNyAyLjE5NTMgLTIuOTg4MyA0LjA5MzggLTIuOTg4MyBjIDIuMzY3MiAwIDQuMjk2OSAxLjkyOTcgNC4yOTY5IDQuMjk2OSBzIC0xLjkyOTcgNC4yOTY5IC00LjI5NjkgNC4yOTY5IGMgLTEuOTIxOSAwLjAwMzkwNiAtMy41MzUyIC0xLjI0MjIgLTQuMTA1NSAtMi45NjQ4IHogbSAxMC4yOTcgLTE1LjA1MSBoIC04LjE3MTkgYyAtMC4zNzg5MSAwIC0wLjcwMzEyIC0wLjE1MjM0IC0wLjkyOTY5IC0wLjM5ODQ0IGwgLTguNzg1MiAtOC43ODUyIGwgLTE0LjQyMiAtMC4wMDM5MDYgdiAtMi42MzI4IGggMTQuOTM4IGMgMC4zMzU5NCAwIDAuNjgzNTkgMC4xMzI4MSAwLjkyOTY5IDAuMzk4NDQgbCA4LjgxNjQgOC43ODUyIGggNy42MTMzIGMgMC41NTA3OCAtMS43MjI3IDIuMTcxOSAtMi45Njg4IDQuMDkzOCAtMi45Njg4IGMgMi4zNjcyIDAgNC4yOTY5IDEuOTA2MiA0LjI5NjkgNC4yNzczIGMgMCAyLjM2NzIgLTEuOTI5NyA0LjI5NjkgLTQuMjk2OSA0LjI5NjkgYyAtMS45MjE5IC0wLjAxMTcxOSAtMy41MzEyIC0xLjI0NjEgLTQuMDgyIC0yLjk2ODggeiBtIC00MS42OTUgLTQ0LjA2MiBjIDAuMzU1NDcgMC42MjEwOSAwLjEzMjgxIDEuNDE4IC0wLjUxMTcyIDEuNzc3MyBjIC0wLjYyMTA5IDAuMzU1NDcgLTEuNDE4IDAuMTMyODEgLTEuNzc3MyAtMC41MTE3MiBjIC0xLjQxOCAtMi41NTA4IC00LjM4NjcgLTMuNzg1MiAtNy4xNzE5IC0zLjA1MDggYyAtMi44MTY0IDAuNzUzOTEgLTQuNzUzOSAzLjI5NjkgLTQuNzE0OCA2LjE5NTMgYyAwIDAuNTExNzIgLTAuMjY1NjIgMC45NDkyMiAtMC43NzczNCAxLjIxNDggYyAtMi4wMTE3IDAuODg2NzIgLTMuMjc3MyAyLjg1NTUgLTMuMjc3MyA1LjAzMTIgYyAwIDIuMTk1MyAxLjI2NTYgNC4xNjQxIDMuMjc3MyA1LjA1MDggYyAwLjY2NDA2IDAuMjg1MTYgMC45NDkyMiAxLjA2MjUgMC42NjQwNiAxLjcyMjcgYyAtMC4yODUxNiAwLjY2NDA2IC0xLjA2MjUgMC45NDkyMiAtMS43MjI3IDAuNjY0MDYgYyAtMS41MTE3IC0wLjY2NDA2IC0yLjcwMzEgLTEuNzIyNyAtMy41ODIgLTMuMTAxNiBjIC0yLjY1MjMgMi4wMTE3IC00LjIwMzEgNS4xMzI4IC00LjIwMzEgOC40ODA1IHMgMS41NTA4IDYuNDY4OCA0LjE4MzYgOC40ODA1IGMgMC45MDYyNSAtMS4zNzg5IDIuMTAxNiAtMi40Mzc1IDMuNjEzMyAtMy4xMDE2IGMgMC42NjQwNiAtMC4yODUxNiAxLjQzNzUgMCAxLjcyMjcgMC42NjQwNiBjIDAuMjg1MTYgMC42NjQwNiAwIDEuNDM3NSAtMC42NjQwNiAxLjcyMjcgYyAtMi4wMTE3IDAuODg2NzIgLTMuMjc3MyAyLjg1NTUgLTMuMjc3MyA1LjAzMTIgYyAwIDIuMTk1MyAxLjI2NTYgNC4xNjQxIDMuMjc3MyA1LjAzMTIgYyAwLjM5ODQ0IDAuMjAzMTIgMC43NzczNCAwLjYyMTA5IDAuNzc3MzQgMS4yMTQ4IGMgLTAuMDM5MDYzIDIuOTE4IDEuOTA2MiA1LjQ2ODggNC43MTQ4IDYuMjIyNyBjIDIuNzg1MiAwLjczNDM4IDUuNzUzOSAtMC41MTE3MiA3LjE3MTkgLTMuMDUwOCBjIDAuMzU1NDcgLTAuNjQ0NTMgMS4xNTIzIC0wLjg2NzE5IDEuNzc3MyAtMC41MTE3MiBjIDAuNjQ0NTMgMC4zNTU0NyAwLjg2NzE5IDEuMTMyOCAwLjUxMTcyIDEuNzc3MyBjIC0wLjk0OTIyIDEuNzIyNyAtMi40MDYyIDMuMDMxMiAtNC4wOTM4IDMuODA0NyBjIDAuMTcxODggMS4xNTIzIDAuNzM0MzggMi4xOTUzIDEuNTMxMiAyLjk4ODMgYyAxIDEgMi4zNjcyIDEuNjEzMyAzLjg1NTUgMS42MTMzIGMgMS41MTE3IDAgMi44Nzg5IC0wLjYyMTA5IDMuODc4OSAtMS42MTMzIGMgMSAtMSAxLjU5MzggLTIuMzQ3NyAxLjU5MzggLTMuODU1NSB2IC01LjkyOTcgYyAtMC4wMTk1MzEgLTMuMDMxMiAtMi40MDYyIC01LjQ4ODMgLTUuNDY4OCAtNS40ODgzIGMgLTAuNzAzMTIgMCAtMS4zMDQ3IC0wLjYwMTU2IC0xLjMwNDcgLTEuMzA0NyBjIDAgLTAuNzM0MzggMC42MDE1NiAtMS4zMjgxIDEuMzA0NyAtMS4zMjgxIGMgMi4xMDE2IDAgNC4wMzEyIDAuODE2NDEgNS40Njg4IDIuMTQ0NSBsIC0wLjAwMzkwNiAtMjkuMDE2IGMgLTEuNDM3NSAxLjMyODEgLTMuMzY3MiAyLjEyMTEgLTUuNDY4OCAyLjEyMTEgYyAtMC43MDMxMiAwIC0xLjMwNDcgLTAuNTcwMzEgLTEuMzA0NyAtMS4zMDQ3IHMgMC42MDE1NiAtMS4zMDQ3IDEuMzA0NyAtMS4zMDQ3IGMgMy4wMTE3IDAgNS40Njg4IC0yLjQ2MDkgNS40Njg4IC01LjQ2ODggdiAtNS45NjA5IGMgMCAtMy4wMTE3IC0yLjQ2MDkgLTUuNDY4OCAtNS40Njg4IC01LjQ2ODggYyAtMi42NTIzIDAgLTQuOTYwOSAxLjk2ODggLTUuMzc4OSA0LjYwMTYgYyAxLjY2NDEgMC43ODUxNiAzLjEyNSAyLjA4OTggNC4wNzQyIDMuODE2NCB6Ij48L3BhdGg+CiAgPC9nPgogIDxnIHRyYW5zZm9ybT0ibWF0cml4KDEuNCAwIDAgMS40IDU0MCA2MjApIiBmaWxsPSIjZmZmZmZmIj4KICAgIDxwYXRoIGQ9Ik0tOTQuMDUtNC43MkwtOTQuMDUtMTAuMjJRLTk0LjA1LTEyLjUzLTk1LjY1LTE0LjEzUS05Ny4yNC0xNS43Mi05OS41NS0xNS43MkwtMTIxLjU1LTE1LjcyTC0xMjEuNTUgMC43OEwtOTkuNTUgMC43OFEtOTcuMjQgMC43OC05NS42NS0wLjgyUS05NC4wNS0yLjQxLTk0LjA1LTQuNzJaTS04OC41NSAxNy4yOEwtOTIuNDYgMTcuMjhMLTEwMy40NiA2LjI4TC0xMjEuNTUgNi4yOEwtMTIxLjU1IDE3LjI4TC0xMjcuMDUgMTcuMjhMLTEyNy4wNS0yMS4yMkwtOTkuNTUtMjEuMjJRLTk3LjQxLTIxLjIyLTk1LjQwLTIwLjM3US05My4zOS0xOS41Mi05MS44OC0xOC4wM1EtOTAuMzctMTYuNTUtODkuNDYtMTQuNTRRLTg4LjU1LTEyLjUzLTg4LjU1LTEwLjIyTC04OC41NS00LjcyUS04OC41NS0yLjk2LTg5LjEwLTEuMzRRLTg5LjY1IDAuMjgtOTAuNjcgMS42NlEtOTEuNjkgMy4wMy05My4wOSA0LjExUS05NC40OSA1LjE4LTk2LjIwIDUuNzNMLTg4LjU1IDEzLjM3WiI+PC9wYXRoPjxwYXRoIGQ9Ik0tNTEuMTUgNi4yOEwtNTEuMTUtMTAuMjJRLTUxLjE1LTEyLjUzLTUyLjc1LTE0LjEzUS01NC4zNC0xNS43Mi01Ni42NS0xNS43MkwtNzMuMTUtMTUuNzJRLTc1LjQ2LTE1LjcyLTc3LjA2LTE0LjEzUS03OC42NS0xMi41My03OC42NS0xMC4yMkwtNzguNjUgNi4yOFEtNzguNjUgOC41OS03Ny4wNiAxMC4xOFEtNzUuNDYgMTEuNzgtNzMuMTUgMTEuNzhMLTU2LjY1IDExLjc4US01NC4zNCAxMS43OC01Mi43NSAxMC4xOFEtNTEuMTUgOC41OS01MS4xNSA2LjI4Wk0tNDUuNjUtMTAuMjJMLTQ1LjY1IDYuMjhRLTQ1LjY1IDguNTMtNDYuNTMgMTAuNTRRLTQ3LjQxIDEyLjU1LTQ4LjkwIDE0LjAzUS01MC4zOCAxNS41Mi01Mi4zOSAxNi40MFEtNTQuNDAgMTcuMjgtNTYuNjUgMTcuMjhMLTczLjE1IDE3LjI4US03NS40NiAxNy4yOC03Ny40NyAxNi40M1EtNzkuNDggMTUuNTctODAuOTYgMTQuMDlRLTgyLjQ1IDEyLjYwLTgzLjMwIDEwLjYwUS04NC4xNSA4LjU5LTg0LjE1IDYuMjhMLTg0LjE1LTEwLjIyUS04NC4xNS0xMi40OC04My4yNy0xNC40OFEtODIuMzktMTYuNDktODAuOTEtMTcuOThRLTc5LjQyLTE5LjQ2LTc3LjQxLTIwLjM0US03NS40MS0yMS4yMi03My4xNS0yMS4yMkwtNTYuNjUtMjEuMjJRLTU0LjQ1LTIxLjIyLTUyLjQ3LTIwLjM0US01MC40OS0xOS40Ni00OC45OC0xNy45OFEtNDcuNDctMTYuNDktNDYuNTYtMTQuNDhRLTQ1LjY1LTEyLjQ4LTQ1LjY1LTEwLjIyWiI+PC9wYXRoPjxwYXRoIGQ9Ik0tMzAuMjUtMjEuMjJMLTEzLjc1LTIxLjIyUS0xMS41NS0yMS4yMi05LjU3LTIwLjM3US03LjU5LTE5LjUyLTYuMTEtMTguMDNRLTQuNjItMTYuNTUtMy43MS0xNC41NFEtMi44MC0xMi41My0yLjc1LTEwLjIyTC04LjI1LTEwLjIyUS04LjI1LTEyLjUzLTkuODUtMTQuMTNRLTExLjQ0LTE1LjcyLTEzLjc1LTE1LjcyTC0zMC4yNS0xNS43MlEtMzIuNTYtMTUuNzItMzQuMTYtMTQuMTNRLTM1Ljc1LTEyLjUzLTM1Ljc1LTEwLjIyTC0zNS43NSA2LjI4US0zNS43NSA4LjU5LTM0LjE2IDEwLjE4US0zMi41NiAxMS43OC0zMC4yNSAxMS43OEwtMTMuNzUgMTEuNzhRLTExLjQ0IDExLjc4LTkuODUgMTAuMThRLTguMjUgOC41OS04LjI1IDYuMjhMLTIuNzUgNi4yOFEtMi43NSA4LjQ4LTMuNjAgMTAuNDZRLTQuNDYgMTIuNDQtNS45NCAxMy45NVEtNy40MyAxNS40Ni05LjQzIDE2LjM3US0xMS40NCAxNy4yOC0xMy43NSAxNy4yOEwtMzAuMjUgMTcuMjhRLTMyLjQ1IDE3LjI4LTM0LjQ2IDE2LjQzUS0zNi40NyAxNS41Ny0zNy45OCAxNC4wOVEtMzkuNDkgMTIuNjAtNDAuMzcgMTAuNjBRLTQxLjI1IDguNTktNDEuMjUgNi4yOEwtNDEuMjUtMTAuMjJRLTQxLjI1LTEyLjQyLTQwLjQwLTE0LjQwUS0zOS41NS0xNi4zOC0zOC4wNi0xNy44N1EtMzYuNTgtMTkuMzUtMzQuNTctMjAuMjZRLTMyLjU2LTIxLjE3LTMwLjI1LTIxLjIyWiI+PC9wYXRoPjxwYXRoIGQ9Ik0yOS4xNS0xNS43MkwxMi42NS0xNS43MlExMC4zNC0xNS43MiA4Ljc0LTE0LjEzUTcuMTUtMTIuNTMgNy4xNS0xMC4yMkw3LjE1IDAuNzhMMzQuNjUgMC43OEwzNC42NS0xMC4yMlEzNC42NS0xMi41MyAzMy4wNS0xNC4xM1EzMS40Ni0xNS43MiAyOS4xNS0xNS43MlpNNDAuMTUtMTAuMjJMNDAuMTUgMTcuMjhMMzQuNjUgMTcuMjhMMzQuNjUgNi4yOEw3LjE1IDYuMjhMNy4xNSAxNy4yOEwxLjY1IDE3LjI4TDEuNjUtMTAuMjJRMS42NS0xMi40MiAyLjUwLTE0LjQwUTMuMzUtMTYuMzggNC44NC0xNy44OVE2LjMyLTE5LjQxIDguMzMtMjAuMzFRMTAuMzQtMjEuMjIgMTIuNjUtMjEuMjJMMjkuMTUtMjEuMjJRMzEuMzUtMjEuMjIgMzMuMzMtMjAuMzdRMzUuMzEtMTkuNTIgMzYuODAtMTguMDNRMzguMjgtMTYuNTUgMzkuMTktMTQuNTRRNDAuMDktMTIuNTMgNDAuMTUtMTAuMjJaIj48L3BhdGg+PHBhdGggZD0iTTc4LjY1LTQuNzJMNzguNjUtMTAuMjJRNzguNjUtMTIuNTMgNzcuMDYtMTQuMTNRNzUuNDYtMTUuNzIgNzMuMTUtMTUuNzJMNTEuMTUtMTUuNzJMNTEuMTUgMC43OEw3My4xNSAwLjc4UTc1LjQ2IDAuNzggNzcuMDYtMC44MlE3OC42NS0yLjQxIDc4LjY1LTQuNzJaTTg0LjE1IDE3LjI4TDgwLjI1IDE3LjI4TDY5LjI1IDYuMjhMNTEuMTUgNi4yOEw1MS4xNSAxNy4yOEw0NS42NSAxNy4yOEw0NS42NS0yMS4yMkw3My4xNS0yMS4yMlE3NS4zMC0yMS4yMiA3Ny4zMC0yMC4zN1E3OS4zMS0xOS41MiA4MC44Mi0xOC4wM1E4Mi4zNC0xNi41NSA4My4yNC0xNC41NFE4NC4xNS0xMi41MyA4NC4xNS0xMC4yMkw4NC4xNS00LjcyUTg0LjE1LTIuOTYgODMuNjAtMS4zNFE4My4wNSAwLjI4IDgyLjAzIDEuNjZRODEuMDIgMy4wMyA3OS42MSA0LjExUTc4LjIxIDUuMTggNzYuNTAgNS43M0w4NC4xNSAxMy4zN1oiPjwvcGF0aD48cGF0aCBkPSJNMTIyLjEwIDYuMjhMMTIyLjEwLTEwLjIyUTEyMi4xMC0xMi41MyAxMjAuNTAtMTQuMTNRMTE4LjkxLTE1LjcyIDExNi42MC0xNS43Mkw5NC42MC0xNS43Mkw5NC42MCAxMS43OEwxMTYuNjAgMTEuNzhRMTE4LjkxIDExLjc4IDEyMC41MCAxMC4xOFExMjIuMTAgOC41OSAxMjIuMTAgNi4yOFpNMTI3LjYwLTEwLjIyTDEyNy42MCA2LjI4UTEyNy42MCA4LjQ4IDEyNi43NSAxMC40NlExMjUuODkgMTIuNDQgMTI0LjQxIDEzLjk1UTEyMi45MiAxNS40NiAxMjAuOTIgMTYuMzdRMTE4LjkxIDE3LjI4IDExNi42MCAxNy4yOEw4OS4xMCAxNy4yOEw4OS4xMC0yMS4yMkwxMTYuNjAtMjEuMjJRMTE4LjgwLTIxLjIyIDEyMC43OC0yMC4zN1ExMjIuNzYtMTkuNTIgMTI0LjI1LTE4LjAzUTEyNS43My0xNi41NSAxMjYuNjQtMTQuNTRRMTI3LjU0LTEyLjUzIDEyNy42MC0xMC4yMloiPjwvcGF0aD4KICA8L2c+Cjwvc3ZnPg==" alt="Rocard Corporation" class="footer-logo" style="height:42px;width:auto;display:block;flex-shrink:0;">
-      <div class="footer-text" style="font-size:13px;text-align:right;">Desarrollado con amor ❤️ por Rocard Corporation – Ana Rodriguez</div>
+      <div class="footer-text" style="font-size:13px;text-align:right;">Desarrollado con amor ❤️ por Rocard Corporation – Ana Rodriguez<br><span style="font-size:12px;opacity:.75;font-style:italic;">Inspirada por Kina, Bonnie &amp; Luna 🐶🐶🐶💕</span></div>
     </div>
   </footer>
 
@@ -290,6 +304,19 @@
         </div>
         <div id="detailFoundMsg" hidden style="text-align:center;background:#E3F8EC;color:#1B7A4B;font-weight:800;font-size:16px;padding:14px;border-radius:14px;">
           ¡Reunida con su familia! 💚
+        </div>
+        <hr style="border:none;border-top:1px solid #f0ece8;margin:20px 0 16px;">
+        <div style="font-size:13px;font-weight:800;color:#8a847e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">💬 Comentarios</div>
+        <div id="detailComments" style="max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+          <div id="detailCommentsLoading" style="color:#b0a89f;font-size:13px;text-align:center;padding:10px;">Cargando comentarios...</div>
+        </div>
+        <div style="background:#faf8f6;border-radius:14px;padding:14px 16px;">
+          <div style="font-size:13px;font-weight:700;color:#33302d;margin-bottom:10px;">Deja un comentario</div>
+          <input id="commentAutor" class="fi" placeholder="Tu nombre *" style="margin-bottom:8px;">
+          <input id="commentTel" class="fi" placeholder="Tu teléfono (opcional)" style="margin-bottom:8px;">
+          <textarea id="commentMsg" class="fi" rows="2" placeholder="Escribe tu mensaje... (Ej: Soy el dueño, mi número es...)" style="margin-bottom:10px;"></textarea>
+          <button onclick="app.submitComment()" class="btn btn-blue" style="width:100%;font-size:15px;padding:11px;">Enviar comentario</button>
+          <div id="commentError" hidden style="color:#e74c3c;font-size:13px;margin-top:6px;"></div>
         </div>
       </div>
     </div>
@@ -623,7 +650,7 @@ async function uploadPhoto(file){
 }
 
 /* ── state ── */
-var state={tab:'buscar',type:'todos',sSexo:'todos',sDept:'',sProv:'',sDist:'',fType:'perro',fSexo:'ne',fPhoto:null,pets:[],adminSession:null,detailPet:null};
+var state={tab:'buscar',type:'todos',sSexo:'todos',sStatus:'todos',sDept:'',sProv:'',sDist:'',fType:'perro',fSexo:'ne',fStatus:'Perdida',fPhoto:null,pets:[],adminSession:null,detailPet:null};
 
 /* ── counters ── */
 function updateCounters(){
@@ -645,6 +672,11 @@ function renderChips(){
   var sx='#9b59b6';
   [{k:'todos',id:'chipSexoTodos'},{k:'hembra',id:'chipSexoHembra'},{k:'macho',id:'chipSexoMacho'}].forEach(function(o){var el=$i(o.id);if(el)el.style.cssText=chipCSS(state.sSexo===o.k,sx);});
   [{k:'hembra',id:'fChipHembra'},{k:'macho',id:'fChipMacho'},{k:'ne',id:'fChipSexoNE'}].forEach(function(o){var el=$i(o.id);if(el)el.style.cssText=chipCSS(state.fSexo===o.k,sx);});
+  var ec={'todos':'#5b6b7a','Perdida':'#D9480F','Vista en la zona':'#9C6A05','En adopciÃ³n':'#2B6CB0','Encontrada':'#1B7A4B'};
+  [{k:'todos',id:'chipEstTodos'},{k:'Perdida',id:'chipEstPerdida'},{k:'Vista en la zona',id:'chipEstVista'},{k:'En adopciÃ³n',id:'chipEstAdopcion'},{k:'Encontrada',id:'chipEstEncontrada'}].forEach(function(o){var el=$i(o.id);if(el)el.style.cssText=chipCSS(state.sStatus===o.k,ec[o.k]);});
+  var fc2={'Perdida':'#D9480F','Vista en la zona':'#9C6A05','En adopciÃ³n':'#2B6CB0','Encontrada':'#1B7A4B'};
+  var fStatuses=[{k:'Perdida',id:'fStatusPerdida'},{k:'Vista en la zona',id:'fStatusVista'},{k:'En adopciÃ³n',id:'fStatusAdopcion'},{k:'Encontrada',id:'fStatusEncontrada'}];
+  fStatuses.forEach(function(o){var el=$i(o.id);if(!el)return;var active=state.fStatus===o.k;el.style.opacity=active?'1':'0.55';el.style.transform=active?'scale(1.04)':'scale(1)';el.style.boxShadow=active?'0 4px 12px rgba(0,0,0,.18)':'none';});
 }
 
 /* ── tabs ── */
@@ -674,6 +706,7 @@ function renderResults(){
   var res=state.pets.filter(function(p){
     if(state.type!=='todos'&&p.type!==state.type)return false;
     if(state.sSexo!=='todos'&&(p.sexo||'ne')!==state.sSexo)return false;
+    if(state.sStatus!=='todos'&&p.status!==state.sStatus)return false;
     if(state.sDept&&p.dept!==state.sDept)return false;
     if(state.sProv&&p.prov!==state.sProv)return false;
     if(state.sDist&&p.dist!==state.sDist)return false;
@@ -747,7 +780,7 @@ function openDetailModal(pet){
   if(canMarkFound(pet)&&pet.status!=='Encontrada'){$i('detailFoundBtn').hidden=false;$i('detailFoundMsg').hidden=true;}
   else if(pet.status==='Encontrada'){$i('detailFoundBtn').hidden=true;$i('detailFoundMsg').hidden=false;}
   else{$i('detailFoundBtn').hidden=true;$i('detailFoundMsg').hidden=true;}
-  $i('detailModal').hidden=false;
+  $i('detailModal').hidden=false;loadComments(pet.id);
 }
 
 /* ── admin list ── */
@@ -781,6 +814,25 @@ async function loadFromDB(){
 }
 
 /* ── app ── */
+/* â”€â”€ comments â”€â”€ */
+async function loadComments(petId){
+  var box=$i('detailComments');
+  if(!box)return;
+  box.innerHTML='<div id="detailCommentsLoading" style="color:#b0a89f;font-size:13px;text-align:center;padding:10px;">Cargando comentarios...</div>';
+  var r=await sb.from('comentarios').select('*').eq('mascota_id',petId).order('created_at',{ascending:true});
+  if(r.error){box.innerHTML='<p style="color:#e74c3c;font-size:13px;">Error al cargar comentarios.</p>';return;}
+  if(!r.data||r.data.length===0){box.innerHTML='<p style="color:#b0a89f;font-size:13px;text-align:center;padding:8px 0;">Sin comentarios aÃºn. Â¡SÃ© el primero!</p>';return;}
+  box.innerHTML=r.data.map(function(c){
+    var d=new Date(c.created_at);var ds=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
+    return '<div style="background:#faf8f6;border-radius:12px;padding:12px 14px;">'
+      +'<div style="display:flex;justify-content:space-between;margin-bottom:4px;">'
+      +'<span style="font-weight:700;font-size:14px;color:#33302d;">'+c.autor+'</span>'
+      +'<span style="font-size:11px;color:#b0a89f;">'+ds+'</span></div>'
+      +(c.tel?'<div style="font-size:13px;color:#21A7E0;margin-bottom:4px;"><a href="'+waUrl(c.tel)+'" target="_blank" style="color:#21A7E0;text-decoration:none;">ðŸ“ž '+c.tel+'</a></div>':'')
+      +'<p style="margin:0;font-size:14px;color:#4a4540;line-height:1.5;">'+c.mensaje+'</p>'
+      +'</div>';
+  }).join('');
+}
 var app={
   setTab:function(t){state.tab=t;renderTabs();renderChips();if(t==='buscar')renderResults();if(t==='admin')renderAdminList();window.scrollTo({top:0,behavior:'smooth'});},
   setType:function(t){state.type=t;renderChips();renderResults();},
@@ -809,12 +861,12 @@ var app={
     var raw=$i('fFecha').value,pts=raw?raw.split('-'):[];
     var fecha=pts.length===3?pts[2]+'/'+pts[1]+'/'+pts[0]:(raw||null);
     var token=crypto.randomUUID();
-    var pet={name:name,type:state.fType,raza:$i('fRaza').value.trim()||'Sin especificar',color:$i('fColor').value.trim()||'—',edad:$i('fEdad').value.trim()||null,dept:dept,prov:$i('fProv').value||null,dist:$i('fDist').value||null,fecha:fecha,tel:tel,sexo:state.fSexo||'ne',status:'Perdida',photo:state.fPhoto||null,senas:$i('fSenas').value.trim()||null,notas:$i('fNotas').value.trim()||null,reporter_token:token};
+    var pet={name:name,type:state.fType,raza:$i('fRaza').value.trim()||'Sin especificar',color:$i('fColor').value.trim()||'—',edad:$i('fEdad').value.trim()||null,dept:dept,prov:$i('fProv').value||null,dist:$i('fDist').value||null,fecha:fecha,tel:tel,sexo:state.fSexo||'ne',status:state.fStatus,photo:state.fPhoto||null,senas:$i('fSenas').value.trim()||null,notas:$i('fNotas').value.trim()||null,reporter_token:token};
     var result=await sb.from('mascotas').insert([pet]).select();
     btn.innerHTML='🐾 Publicar mascota perdida';btn.disabled=false;
     if(result.error){$i('formError').textContent='Error al guardar: '+result.error.message;$i('formError').hidden=false;return;}
     if(result.data&&result.data[0]){localStorage.setItem('cac_pet_'+result.data[0].id,token);}
-    state.fPhoto=null;state.fType='perro';state.fSexo='ne';
+    state.fPhoto=null;state.fType='perro';state.fSexo='ne';state.fStatus='Perdida';
     ['fName','fRaza','fColor','fEdad','fTel','fSenas','fNotas','fFecha'].forEach(function(id){$i(id).value='';});
     $i('fDept').value='';$i('fProvWrap').hidden=true;$i('fDistWrap').hidden=true;
     $i('photoPreview').hidden=true;$i('photoPlaceholder').hidden=false;
@@ -870,6 +922,18 @@ var app={
     var rows=state.pets.map(function(p){return {'ID':p.id,'Nombre':p.name,'Tipo':p.type,'Raza':p.raza,'Color':p.color,'Edad':p.edad,'Departamento':p.dept,'Provincia':p.prov,'Distrito':p.dist,'Fecha perdida':p.fecha,'Teléfono':p.tel,'Estado':p.status,'Señas':p.senas,'Notas':p.notas,'Foto URL':p.photo,'Registrado':p.created_at};});
     var ws=XLSX.utils.json_to_sheet(rows),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Mascotas');XLSX.writeFile(wb,'CaminandoACasa_registros.xlsx');toast('📊 Excel descargado');
   },
+  submitComment:async function(){
+    var p=state.detailPet;if(!p)return;
+    var autor=$i('commentAutor').value.trim(),msg=$i('commentMsg').value.trim(),tel=$i('commentTel').value.trim();
+    if(!autor||!msg){$i('commentError').textContent='âš ï¸ El nombre y el mensaje son obligatorios.';$i('commentError').hidden=false;return;}
+    $i('commentError').hidden=true;
+    var r=await sb.from('comentarios').insert([{mascota_id:p.id,autor:autor,tel:tel||null,mensaje:msg}]);
+    if(r.error){$i('commentError').textContent='Error: '+r.error.message;$i('commentError').hidden=false;return;}
+    $i('commentAutor').value='';$i('commentTel').value='';$i('commentMsg').value='';
+    toast('ðŸ’¬ Comentario enviado');loadComments(p.id);
+  },
+  setSStatus:function(s){state.sStatus=s;renderChips();renderResults();},
+  setFStatus:function(s){state.fStatus=s;renderChips();},
   openLightbox:function(src){$i('lightboxImg').src=src;$i('lightbox').hidden=false;},renderResults:renderResults
 };
 
