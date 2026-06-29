@@ -132,6 +132,12 @@
           <button id="chipGato"  onclick="app.setType('gato')">🐱 Gato</button>
           <button id="chipOtro"  onclick="app.setType('otro')">🐾 Otro</button>
         </div>
+        <div style="font-size:13px;font-weight:700;color:#8a847e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;margin-top:4px;">Sexo</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;">
+          <button id="chipSexoTodos"  onclick="app.setSexo('todos')">🐾 Todos</button>
+          <button id="chipSexoHembra" onclick="app.setSexo('hembra')">♀️ Hembra</button>
+          <button id="chipSexoMacho"  onclick="app.setSexo('macho')">♂️ Macho</button>
+        </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;">
           <div>
             <label class="fl" style="text-transform:uppercase;letter-spacing:.5px;">Departamento</label>
@@ -182,6 +188,12 @@
           <button type="button" id="fChipPerro" onclick="app.setFType('perro')">🐶 Perro</button>
           <button type="button" id="fChipGato"  onclick="app.setFType('gato')">🐱 Gato</button>
           <button type="button" id="fChipOtro"  onclick="app.setFType('otro')">🐾 Otro</button>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:#8a847e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px;margin-top:4px;">Sexo de la mascota</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;">
+          <button type="button" id="fChipHembra" onclick="app.setFSexo('hembra')">♀️ Hembra</button>
+          <button type="button" id="fChipMacho"  onclick="app.setFSexo('macho')">♂️ Macho</button>
+          <button type="button" id="fChipSexoNE" onclick="app.setFSexo('ne')">❓ No especificado</button>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
           <div><label class="fl">Nombre de la mascota *</label><input id="fName" class="fi" placeholder="Ej. Rocky"></div>
@@ -269,12 +281,13 @@
           <div style="font-size:12px;font-weight:800;color:#1683B5;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Notas para quien la encuentre</div>
           <p id="detailNotasText" style="margin:0;font-size:14px;color:#1683B5;line-height:1.6;"></p>
         </div>
-        <a id="detailTel" href="#" style="display:flex;align-items:center;gap:10px;text-decoration:none;background:#faf8f6;border:1.5px solid #f0ece8;border-radius:14px;padding:12px 16px;color:#33302d;font-weight:700;font-size:16px;margin-bottom:12px;">
-          <span style="font-size:20px;">📞</span> <span id="detailTelText"></span>
+        <a id="detailTel" href="#" style="display:flex;align-items:center;gap:10px;text-decoration:none;background:#25D366;border-radius:14px;padding:12px 16px;color:#fff;font-weight:700;font-size:16px;margin-bottom:12px;">
+          <span style="font-size:20px;">💬</span> <span id="detailTelText"></span> <span style="font-size:13px;opacity:.85;">(WhatsApp)</span>
         </a>
-        <button id="detailFoundBtn" hidden onclick="app.markFoundFromDetail()" style="width:100%;border:none;cursor:pointer;background:#27ae60;color:#fff;font-weight:800;font-size:16px;padding:14px;border-radius:14px;box-shadow:0 6px 14px rgba(39,174,96,.28);">
-          ¡Ya la encontré! 🎉
-        </button>
+        <div style="display:flex;gap:10px;margin-bottom:4px;">
+          <button id="detailSeenBtn" hidden onclick="app.waSeenFromDetail()" style="flex:1;border:none;cursor:pointer;background:#21A7E0;color:#fff;font-weight:800;font-size:15px;padding:13px 8px;border-radius:14px;box-shadow:0 6px 14px rgba(33,167,224,.28);">👀 <span id="detailSeenText">La he visto</span></button>
+          <button id="detailFoundBtn" hidden onclick="app.markFoundFromDetail()" style="flex:1;border:none;cursor:pointer;background:#27ae60;color:#fff;font-weight:800;font-size:15px;padding:13px 8px;border-radius:14px;box-shadow:0 6px 14px rgba(39,174,96,.28);"><span id="detailFoundText">¡Ya la encontré!</span> 🎉</button>
+        </div>
         <div id="detailFoundMsg" hidden style="text-align:center;background:#E3F8EC;color:#1B7A4B;font-weight:800;font-size:16px;padding:14px;border-radius:14px;">
           ¡Reunida con su familia! 💚
         </div>
@@ -581,6 +594,8 @@ const tabCSS    = function(active){ var b="border:none;cursor:pointer;font-famil
 const fillSel   = function(id,opts,empty,val){ $i(id).innerHTML='<option value="">'+(empty||'')+'</option>'+opts.map(function(o){return '<option value="'+o+'"'+(o===val?' selected':'')+'>'+o+'</option>';}).join(''); };
 const myToken   = function(petId){ return localStorage.getItem('cac_pet_'+petId); };
 const canMarkFound = function(p){ return !!state.adminSession || (!!p.reporter_token && myToken(p.id)===p.reporter_token); };
+const waUrl = function(tel){ return 'https://wa.me/51'+tel.replace(/\D/g,''); };
+const sexoLabel = function(p,fem,mas,neu){ return p.sexo==='hembra'?fem:p.sexo==='macho'?mas:neu; };
 
 /* ── photo: compress then upload to Supabase Storage ── */
 async function uploadPhoto(file){
@@ -608,7 +623,7 @@ async function uploadPhoto(file){
 }
 
 /* ── state ── */
-var state={tab:'buscar',type:'todos',sDept:'',sProv:'',sDist:'',fType:'perro',fPhoto:null,pets:[],adminSession:null,detailPet:null};
+var state={tab:'buscar',type:'todos',sSexo:'todos',sDept:'',sProv:'',sDist:'',fType:'perro',fSexo:'ne',fPhoto:null,pets:[],adminSession:null,detailPet:null};
 
 /* ── counters ── */
 function updateCounters(){
@@ -627,6 +642,9 @@ function renderChips(){
   ['todos','perro','gato','otro'].forEach(function(t){var el=$i('chip'+t[0].toUpperCase()+t.slice(1));if(el)el.style.cssText=chipCSS(state.type===t,sc[t]);});
   var fc={perro:'#21A7E0',gato:'#F8B61E',otro:'#27ae60'};
   ['perro','gato','otro'].forEach(function(t){var el=$i('fChip'+t[0].toUpperCase()+t.slice(1));if(el)el.style.cssText=chipCSS(state.fType===t,fc[t]);});
+  var sx='#9b59b6';
+  [{k:'todos',id:'chipSexoTodos'},{k:'hembra',id:'chipSexoHembra'},{k:'macho',id:'chipSexoMacho'}].forEach(function(o){var el=$i(o.id);if(el)el.style.cssText=chipCSS(state.sSexo===o.k,sx);});
+  [{k:'hembra',id:'fChipHembra'},{k:'macho',id:'fChipMacho'},{k:'ne',id:'fChipSexoNE'}].forEach(function(o){var el=$i(o.id);if(el)el.style.cssText=chipCSS(state.fSexo===o.k,sx);});
 }
 
 /* ── tabs ── */
@@ -655,6 +673,7 @@ function renderResults(){
   var q=($i('searchQ')?$i('searchQ').value:'').trim().toLowerCase();
   var res=state.pets.filter(function(p){
     if(state.type!=='todos'&&p.type!==state.type)return false;
+    if(state.sSexo!=='todos'&&(p.sexo||'ne')!==state.sSexo)return false;
     if(state.sDept&&p.dept!==state.sDept)return false;
     if(state.sProv&&p.prov!==state.sProv)return false;
     if(state.sDist&&p.dist!==state.sDist)return false;
@@ -670,13 +689,16 @@ function renderResults(){
     var photo=p.photo
       ?'<img src="'+p.photo+'" alt="'+p.name+'" style="width:100%;height:100%;object-fit:cover;display:block;">'
       :'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f5f1ed;font-size:50px;opacity:.3;">🐾</div>';
+    var foundLabel=sexoLabel(p,'¡Ya la encontré!','¡Ya lo encontré!','¡Ya la encontré!');
+    var seenLabel=sexoLabel(p,'La he visto','Lo he visto','La he visto');
+    var sexoTag=p.sexo&&p.sexo!=='ne'?'<span style="background:#f0e8ff;color:#6b40b0;font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px;">'+(p.sexo==='hembra'?'♀️ Hembra':'♂️ Macho')+'</span>':'';
     var foundSection='';
-    if(canMarkFound(p)){
-      foundSection=p.status!=='Encontrada'
-        ?'<button onclick="event.stopPropagation();app.markFound('+p.id+')" style="margin-top:2px;width:100%;border:none;cursor:pointer;background:#27ae60;color:#fff;font-weight:800;font-size:15px;padding:12px;border-radius:13px;box-shadow:0 6px 14px rgba(39,174,96,.28);">¡Ya la encontré! 🎉</button>'
-        :'<div style="margin-top:2px;text-align:center;background:#E3F8EC;color:#1B7A4B;font-weight:800;font-size:15px;padding:12px;border-radius:13px;">¡Reunida con su familia! 💚</div>';
-    } else if(p.status==='Encontrada'){
+    if(p.status==='Encontrada'){
       foundSection='<div style="margin-top:2px;text-align:center;background:#E3F8EC;color:#1B7A4B;font-weight:800;font-size:15px;padding:12px;border-radius:13px;">¡Reunida con su familia! 💚</div>';
+    } else {
+      var seenBtn='<a href="'+waUrl(p.tel)+'" target="_blank" onclick="event.stopPropagation()" style="flex:1;display:flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;background:#21A7E0;color:#fff;font-weight:800;font-size:14px;padding:11px 6px;border-radius:13px;">👀 '+seenLabel+'</a>';
+      var foundBtn=canMarkFound(p)?'<button onclick="event.stopPropagation();app.markFound('+p.id+')" style="flex:1;border:none;cursor:pointer;background:#27ae60;color:#fff;font-weight:800;font-size:14px;padding:11px 6px;border-radius:13px;">'+foundLabel+' 🎉</button>':'';
+      foundSection='<div style="display:flex;gap:8px;margin-top:2px;">'+seenBtn+foundBtn+'</div>';
     }
     return '<article onclick="app.openDetail('+p.id+')" style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.07);display:flex;flex-direction:column;cursor:pointer;transition:transform .15s,box-shadow .15s;" onmouseover="this.style.transform=\'translateY(-3px)\';this.style.boxShadow=\'0 12px 28px rgba(0,0,0,.12)\';" onmouseout="this.style.transform=\'\';this.style.boxShadow=\'0 6px 20px rgba(0,0,0,.07)\';">'
       +'<div style="height:6px;background:'+tc+';"></div>'
@@ -689,7 +711,7 @@ function renderResults(){
       +'<h3 style="margin:0;font-family:\'Fredoka\',sans-serif;font-weight:600;font-size:21px;color:#33302d;">'+p.name+'</h3></div>'
       +'<div style="display:flex;flex-wrap:wrap;gap:6px;">'
       +'<span style="background:#e7f5fd;color:#1683B5;font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px;">'+(p.raza||'—')+'</span>'
-      +'<span style="background:#f4f1ee;color:#6b655f;font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px;">'+(p.color||'—')+'</span></div>'
+      +'<span style="background:#f4f1ee;color:#6b655f;font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px;">'+(p.color||'—')+'</span>'+sexoTag+'</div>'
       +'<div style="font-size:14px;color:#6b655f;line-height:1.5;">'
       +'<div style="display:flex;gap:7px;"><span style="opacity:.6;">📍</span><span>'+zona+'</span></div>'
       +'<div style="display:flex;gap:7px;margin-top:3px;"><span style="opacity:.6;">📅</span><span>Perdida el '+(p.fecha||'—')+'</span></div></div>'
@@ -718,7 +740,10 @@ function openDetailModal(pet){
     +'<div style="display:flex;gap:10px;"><span style="opacity:.6;font-size:18px;">📅</span><span>Perdida el '+(pet.fecha||'—')+'</span></div>';
   if(pet.senas){$i('detailSenas').hidden=false;$i('detailSenasText').textContent=pet.senas;}else{$i('detailSenas').hidden=true;}
   if(pet.notas){$i('detailNotas').hidden=false;$i('detailNotasText').textContent=pet.notas;}else{$i('detailNotas').hidden=true;}
-  $i('detailTelText').textContent=pet.tel;$i('detailTel').href='tel:'+pet.tel;
+  $i('detailTelText').textContent=pet.tel;$i('detailTel').href=waUrl(pet.tel);$i('detailTel').target='_blank';
+  var dl=sexoLabel(pet,'La he visto','Lo he visto','La he visto');$i('detailSeenText').textContent=dl;
+  var fl=sexoLabel(pet,'¡Ya la encontré!','¡Ya lo encontré!','¡Ya la encontré!');$i('detailFoundText').textContent=fl;
+  $i('detailSeenBtn').hidden=pet.status==='Encontrada';$i('detailSeenBtn').href=waUrl(pet.tel);
   if(canMarkFound(pet)&&pet.status!=='Encontrada'){$i('detailFoundBtn').hidden=false;$i('detailFoundMsg').hidden=true;}
   else if(pet.status==='Encontrada'){$i('detailFoundBtn').hidden=true;$i('detailFoundMsg').hidden=false;}
   else{$i('detailFoundBtn').hidden=true;$i('detailFoundMsg').hidden=true;}
@@ -759,7 +784,7 @@ async function loadFromDB(){
 var app={
   setTab:function(t){state.tab=t;renderTabs();renderChips();if(t==='buscar')renderResults();if(t==='admin')renderAdminList();window.scrollTo({top:0,behavior:'smooth'});},
   setType:function(t){state.type=t;renderChips();renderResults();},
-  setFType:function(t){state.fType=t;renderChips();},
+  setFType:function(t){state.fType=t;renderChips();},setSexo:function(s){state.sSexo=s;renderChips();renderResults();},setFSexo:function(s){state.fSexo=s;renderChips();},
   onSearchDept:function(){state.sDept=$i('sDept').value;state.sProv='';state.sDist='';renderSearch();renderResults();},
   onSearchProv:function(){state.sProv=$i('sProv').value;state.sDist='';renderSearch();renderResults();},
   onSearchDist:function(){state.sDist=$i('sDist').value;renderResults();},
@@ -784,12 +809,12 @@ var app={
     var raw=$i('fFecha').value,pts=raw?raw.split('-'):[];
     var fecha=pts.length===3?pts[2]+'/'+pts[1]+'/'+pts[0]:(raw||null);
     var token=crypto.randomUUID();
-    var pet={name:name,type:state.fType,raza:$i('fRaza').value.trim()||'Sin especificar',color:$i('fColor').value.trim()||'—',edad:$i('fEdad').value.trim()||null,dept:dept,prov:$i('fProv').value||null,dist:$i('fDist').value||null,fecha:fecha,tel:tel,status:'Perdida',photo:state.fPhoto||null,senas:$i('fSenas').value.trim()||null,notas:$i('fNotas').value.trim()||null,reporter_token:token};
+    var pet={name:name,type:state.fType,raza:$i('fRaza').value.trim()||'Sin especificar',color:$i('fColor').value.trim()||'—',edad:$i('fEdad').value.trim()||null,dept:dept,prov:$i('fProv').value||null,dist:$i('fDist').value||null,fecha:fecha,tel:tel,sexo:state.fSexo||'ne',status:'Perdida',photo:state.fPhoto||null,senas:$i('fSenas').value.trim()||null,notas:$i('fNotas').value.trim()||null,reporter_token:token};
     var result=await sb.from('mascotas').insert([pet]).select();
     btn.innerHTML='🐾 Publicar mascota perdida';btn.disabled=false;
     if(result.error){$i('formError').textContent='Error al guardar: '+result.error.message;$i('formError').hidden=false;return;}
     if(result.data&&result.data[0]){localStorage.setItem('cac_pet_'+result.data[0].id,token);}
-    state.fPhoto=null;state.fType='perro';
+    state.fPhoto=null;state.fType='perro';state.fSexo='ne';
     ['fName','fRaza','fColor','fEdad','fTel','fSenas','fNotas','fFecha'].forEach(function(id){$i(id).value='';});
     $i('fDept').value='';$i('fProvWrap').hidden=true;$i('fDistWrap').hidden=true;
     $i('photoPreview').hidden=true;$i('photoPlaceholder').hidden=false;
