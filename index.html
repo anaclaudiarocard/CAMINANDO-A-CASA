@@ -256,6 +256,7 @@
       <div style="background:#fff;border-radius:22px;padding:26px;box-shadow:0 8px 24px rgba(0,0,0,.06);">
         <h3 style="margin:0 0 6px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:20px;color:#33302d;">📋 Todos los registros</h3>
         <p style="margin:0 0 18px;font-size:14px;color:#8a847e;">Desde aquí puedes eliminar registros falsos o marcar mascotas como encontradas. Los cambios son inmediatos.</p>
+        <div id="notifSection" hidden style="margin-bottom:24px;"><h3 style="font-family:'Fredoka',sans-serif;font-size:20px;color:#D9480F;margin:0 0 12px;">🔔 Notificaciones pendientes</h3><div id="notifList" style="display:flex;flex-direction:column;gap:10px;"></div></div>
         <div id="adminList"></div>
       </div>
     </section>
@@ -300,7 +301,7 @@
         </a>
         <div style="display:flex;gap:10px;margin-bottom:4px;">
           <button id="detailSeenBtn" hidden onclick="app.waSeenFromDetail()" style="flex:1;border:none;cursor:pointer;background:#21A7E0;color:#fff;font-weight:800;font-size:15px;padding:13px 8px;border-radius:14px;box-shadow:0 6px 14px rgba(33,167,224,.28);">👀 <span id="detailSeenText">La he visto</span></button>
-          <button id="detailFoundBtn" hidden onclick="app.markFoundFromDetail()" style="flex:1;border:none;cursor:pointer;background:#27ae60;color:#fff;font-weight:800;font-size:15px;padding:13px 8px;border-radius:14px;box-shadow:0 6px 14px rgba(39,174,96,.28);"><span id="detailFoundText">¡Ya la encontré!</span> 🎉</button>
+          <button id="detailFoundBtn" hidden onclick="app.reportFound(state.detailPet&&state.detailPet.id)" style="flex:1;border:none;cursor:pointer;background:#27ae60;color:#fff;font-weight:800;font-size:15px;padding:13px 8px;border-radius:14px;box-shadow:0 6px 14px rgba(39,174,96,.28);"><span id="detailFoundText">¡Ya la encontré!</span> 🎉</button>
         </div>
         <div id="detailFoundMsg" hidden style="text-align:center;background:#E3F8EC;color:#1B7A4B;font-weight:800;font-size:16px;padding:14px;border-radius:14px;">
           ¡Reunida con su familia! 💚
@@ -725,15 +726,16 @@ function renderResults(){
     var foundLabel=sexoLabel(p,'¡Ya la encontré!','¡Ya lo encontré!','¡Ya la encontré!');
     var seenLabel=sexoLabel(p,'La he visto','Lo he visto','La he visto');
     var sexoTag=p.sexo&&p.sexo!=='ne'?'<span style="background:#f0e8ff;color:#6b40b0;font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px;">'+(p.sexo==='hembra'?'♀️ Hembra':'♂️ Macho')+'</span>':'';
+    var reunidaLabel=sexoLabel(p,'¡Reunida con su familia!','¡Reunido con su familia!','¡Reunida con su familia!');
     var foundSection='';
     if(p.status==='Encontrada'){
-      foundSection='<div style="margin-top:2px;text-align:center;background:#E3F8EC;color:#1B7A4B;font-weight:800;font-size:15px;padding:12px;border-radius:13px;">¡Reunida con su familia! 💚</div>';
+      foundSection='<div style="margin-top:2px;text-align:center;background:#E3F8EC;color:#1B7A4B;font-weight:800;font-size:15px;padding:12px;border-radius:13px;">'+reunidaLabel+' ❤️</div>';
     } else {
       var seenBtn='<a href="'+waUrl(p.tel)+'" target="_blank" onclick="event.stopPropagation()" style="flex:1;display:flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;background:#21A7E0;color:#fff;font-weight:800;font-size:14px;padding:11px 6px;border-radius:13px;">👀 '+seenLabel+'</a>';
-      var foundBtn=canMarkFound(p)?'<button onclick="event.stopPropagation();app.markFound('+p.id+')" style="flex:1;border:none;cursor:pointer;background:#27ae60;color:#fff;font-weight:800;font-size:14px;padding:11px 6px;border-radius:13px;">'+foundLabel+' 🎉</button>':'';
+      var foundBtn='<button onclick="event.stopPropagation();app.reportFound('+p.id+')" style="flex:1;border:none;cursor:pointer;background:#27ae60;color:#fff;font-weight:800;font-size:14px;padding:11px 6px;border-radius:13px;">'+foundLabel+' 🎉</button>';
       foundSection='<div style="display:flex;gap:8px;margin-top:2px;">'+seenBtn+foundBtn+'</div>';
     }
-    return '<article onclick="app.openDetail('+p.id+')" style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.07);display:flex;flex-direction:column;cursor:pointer;transition:transform .15s,box-shadow .15s;" onmouseover="this.style.transform=\'translateY(-3px)\';this.style.boxShadow=\'0 12px 28px rgba(0,0,0,.12)\';" onmouseout="this.style.transform=\'\';this.style.boxShadow=\'0 6px 20px rgba(0,0,0,.07)\';">'
+        return '<article onclick="app.openDetail('+p.id+')" style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.07);display:flex;flex-direction:column;cursor:pointer;transition:transform .15s,box-shadow .15s;" onmouseover="this.style.transform=\'translateY(-3px)\';this.style.boxShadow=\'0 12px 28px rgba(0,0,0,.12)\';" onmouseout="this.style.transform=\'\';this.style.boxShadow=\'0 6px 20px rgba(0,0,0,.07)\';">'
       +'<div style="height:6px;background:'+tc+';"></div>'
       +'<div style="position:relative;height:190px;">'+photo
       +'<span style="position:absolute;top:12px;left:12px;background:'+sbg+';color:'+sc+';font-size:12px;font-weight:800;padding:6px 12px;border-radius:999px;">'+p.status+'</span>'
@@ -815,6 +817,34 @@ async function loadFromDB(){
 
 /* ── app ── */
 /* â”€â”€ comments â”€â”€ */
+async function reportFoundFn(petId){
+  var p=state.pets.find(function(x){return x.id===petId;});
+  if(!p)return;
+  var reunido=p.sexo==='macho'?'lo encontre a':'la encontre a';
+  var msg=encodeURIComponent('Hola, '+reunido+' '+p.name+'. Me comunico desde CaminandoACasa.com');
+  window.open(waUrl(p.tel)+'?text='+msg,'_blank');
+  await sb.from('notificaciones').insert([{mascota_id:p.id,mascota_nombre:p.name,mascota_tel:p.tel,mensaje:'Alguien reporto haber encontrado a '+p.name+'.',vista:false}]);
+  toast('Mensaje enviado. Gracias por ayudar!');
+}
+async function loadNotificaciones(){
+  if(!state.adminSession)return;
+  var r=await sb.from('notificaciones').select('*').eq('vista',false).order('created_at',{ascending:false});
+  var sec=document.getElementById('notifSection');
+  if(r.error||!r.data||r.data.length===0){if(sec)sec.hidden=true;return;}
+  if(sec)sec.hidden=false;
+  document.getElementById('notifList').innerHTML=r.data.map(function(n){
+    var d=new Date(n.created_at),ds=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');
+    return '<div style="background:#FFF8E6;border:1.5px solid #F4A91F;border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">'
+      +'<div><div style="font-weight:700;font-size:15px;color:#33302d;">🔔 '+n.mascota_nombre+'</div>'
+      +'<div style="font-size:13px;color:#8a847e;margin-top:2px;">'+n.mensaje+'</div>'
+      +'<div style="font-size:12px;color:#b0a89f;margin-top:2px;">'+ds+'</div></div>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap;">'
+      +(n.mascota_tel?'<a href="'+waUrl(n.mascota_tel)+'" target="_blank" class="btn btn-blue" style="font-size:13px;padding:8px 12px;text-decoration:none;">Contactar dueno</a>':'')
+      +'<button onclick="app.markFoundFromNotif('+n.mascota_id+','+n.id+')" class="btn btn-green" style="font-size:13px;padding:8px 12px;">Marcar reunida</button>'
+      +'<button onclick="app.dismissNotif('+n.id+')" class="btn btn-gray" style="font-size:13px;padding:8px 12px;">X Descartar</button>'
+      +'</div></div>';
+  }).join('');
+}
 async function loadComments(petId){
   var box=$i('detailComments');
   if(!box)return;
@@ -834,7 +864,7 @@ async function loadComments(petId){
   }).join('');
 }
 var app={
-  setTab:function(t){state.tab=t;renderTabs();renderChips();if(t==='buscar')renderResults();if(t==='admin')renderAdminList();window.scrollTo({top:0,behavior:'smooth'});},
+  setTab:function(t){state.tab=t;renderTabs();renderChips();if(t==='buscar')renderResults();if(t==='admin'){renderAdminList();loadNotificaciones();}window.scrollTo({top:0,behavior:'smooth'});},
   setType:function(t){state.type=t;renderChips();renderResults();},
   setFType:function(t){state.fType=t;renderChips();},setSexo:function(s){state.sSexo=s;renderChips();renderResults();},setFSexo:function(s){state.fSexo=s;renderChips();},
   onSearchDept:function(){state.sDept=$i('sDept').value;state.sProv='';state.sDist='';renderSearch();renderResults();},
@@ -916,11 +946,22 @@ var app={
     this.closeLogin();renderTabs();this.setTab('admin');renderAdminList();
   },
   logout:async function(){await sb.auth.signOut();state.adminSession=null;renderTabs();this.setTab('buscar');toast('Sesión cerrada');},
-  adminRefresh:async function(){toast('🔄 Actualizando...');await loadFromDB();renderAdminList();},
+  adminRefresh:async function(){toast('🔄 Actualizando...');await loadFromDB();renderAdminList();loadNotificaciones();},
   exportExcel:function(){
     if(!state.pets.length){toast('No hay registros para exportar');return;}
     var rows=state.pets.map(function(p){return {'ID':p.id,'Nombre':p.name,'Tipo':p.type,'Raza':p.raza,'Color':p.color,'Edad':p.edad,'Departamento':p.dept,'Provincia':p.prov,'Distrito':p.dist,'Fecha perdida':p.fecha,'Teléfono':p.tel,'Estado':p.status,'Señas':p.senas,'Notas':p.notas,'Foto URL':p.photo,'Registrado':p.created_at};});
     var ws=XLSX.utils.json_to_sheet(rows),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Mascotas');XLSX.writeFile(wb,'CaminandoACasa_registros.xlsx');toast('📊 Excel descargado');
+  },
+  reportFound:async function(id){if(id)await reportFoundFn(id);},
+  markFoundFromNotif:async function(petId,notifId){
+    await sb.from('mascotas').update({status:'Encontrada'}).eq('id',petId);
+    await sb.from('notificaciones').update({vista:true}).eq('id',notifId);
+    toast('Marcada como reunida con su familia!');
+    await loadFromDB();renderAdminList();loadNotificaciones();
+  },
+  dismissNotif:async function(notifId){
+    await sb.from('notificaciones').update({vista:true}).eq('id',notifId);
+    loadNotificaciones();toast('Notificacion descartada');
   },
   submitComment:async function(){
     var p=state.detailPet;if(!p)return;
