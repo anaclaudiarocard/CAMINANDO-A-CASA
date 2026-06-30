@@ -801,7 +801,8 @@ function renderAdminList(){
       +'<div style="font-size:13px;color:#8a847e;margin-top:2px;">'+zona+' • Tel: '+p.tel+'</div>'
       +'<div style="font-size:12px;color:#b0a89f;margin-top:1px;">'+(p.fecha||'—')+' • '+(p.raza||'—')+' '+ti+'</div></div>'
       +'<div style="display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;" onclick="event.stopPropagation();">'
-      +foundBtn+'<button onclick="app.confirmDelete('+p.id+',`'+p.name+'`)" class="btn btn-red" style="font-size:13px;padding:7px 12px;">🗑️ Eliminar</button>'
+      +foundBtn+'<button onclick="app.editPhoto('+p.id+')" class="btn btn-gray" style="font-size:13px;padding:7px 12px;">ðŸ“· Foto</button>'
+      +'<button onclick="app.confirmDelete('+p.id+',`'+p.name+'`)" class="btn btn-red" style="font-size:13px;padding:7px 12px;">🗑️ Eliminar</button>'
       +'</div></div>';
   }).join('');
 }
@@ -946,6 +947,21 @@ var app={
     this.closeLogin();renderTabs();this.setTab('admin');renderAdminList();
   },
   logout:async function(){await sb.auth.signOut();state.adminSession=null;renderTabs();this.setTab('buscar');toast('Sesión cerrada');},
+  editPhoto:function(id){
+    var inp=document.getElementById('adminPhotoInput');
+    inp.onchange=async function(){
+      var f=inp.files&&inp.files[0];if(!f)return;
+      toast('Subiendo foto...');
+      var url=await uploadPhoto(f);
+      if(!url){toast('Error al subir foto');inp.value='';return;}
+      var r=await sb.from('mascotas').update({photo:url}).eq('id',id);
+      if(r.error){toast('Error: '+r.error.message);inp.value='';return;}
+      toast('âœ… Foto actualizada');inp.value='';
+      await loadFromDB();renderAdminList();
+    };
+    inp.value='';
+    inp.click();
+  },
   adminRefresh:async function(){toast('🔄 Actualizando...');await loadFromDB();renderAdminList();loadNotificaciones();},
   exportExcel:function(){
     if(!state.pets.length){toast('No hay registros para exportar');return;}
@@ -993,5 +1009,6 @@ document.addEventListener('DOMContentLoaded',async function(){
     <img id="lightboxImg" src="" style="max-width:95vw;max-height:95vh;border-radius:10px;box-shadow:0 8px 40px rgba(0,0,0,.6);object-fit:contain;">
     <button onclick="document.getElementById('lightbox').hidden=true" style="position:absolute;top:16px;right:20px;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:28px;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);">×</button>
   </div>
+<input type="file" id="adminPhotoInput" accept="image/*" style="display:none">
 </body>
 </html>
