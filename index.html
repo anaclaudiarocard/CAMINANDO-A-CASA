@@ -801,7 +801,7 @@ function renderAdminList(){
       +'<div style="font-size:13px;color:#8a847e;margin-top:2px;">'+zona+' • Tel: '+p.tel+'</div>'
       +'<div style="font-size:12px;color:#b0a89f;margin-top:1px;">'+(p.fecha||'—')+' • '+(p.raza||'—')+' '+ti+'</div></div>'
       +'<div style="display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;" onclick="event.stopPropagation();">'
-      +foundBtn+'<button onclick="app.editPhoto('+p.id+')" class="btn btn-gray" style="font-size:13px;padding:7px 12px;">ðŸ“· Foto</button>'
+      +foundBtn+'<button onclick="app.editPhoto('+p.id+')" class="btn btn-gray" style="font-size:13px;padding:7px 12px;">Foto</button>'
       +'<button onclick="app.confirmDelete('+p.id+',`'+p.name+'`)" class="btn btn-red" style="font-size:13px;padding:7px 12px;">🗑️ Eliminar</button>'
       +'</div></div>';
   }).join('');
