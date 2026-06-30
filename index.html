@@ -711,7 +711,7 @@ function renderResults(){
     if(state.sDept&&p.dept!==state.sDept)return false;
     if(state.sProv&&p.prov!==state.sProv)return false;
     if(state.sDist&&p.dist!==state.sDist)return false;
-    if(q){var hay=(p.name+' '+p.raza+' '+p.color+' '+(p.dist||'')+' '+(p.prov||'')+' '+(p.dept||'')+' '+(p.senas||'')).toLowerCase();if(hay.indexOf(q)===-1)return false;}
+    if(q){var hay=(p.name+' '+p.raza+' '+p.color+' '+(p.edad||'')+' '+(p.dist||'')+' '+(p.prov||'')+' '+(p.dept||'')+' '+(p.senas||'')+' '+(p.notas||'')+' '+(p.status||'')).toLowerCase();if(hay.indexOf(q)===-1)return false;}
     return true;
   });
   $i('loadingMsg').hidden=true;
